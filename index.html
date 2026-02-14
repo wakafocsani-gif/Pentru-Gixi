@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pentru Gixi</title>
+  <title>Pentru tine</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
   <style>
     * {
       margin: 0;
@@ -17,19 +19,37 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
       font-family: 'Inter', sans-serif;
-      color: #f5f5f5;
-      padding: 20px;
+      color: #fff;
+      overflow: hidden;
+      background: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6d365, #fda085);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       max-width: 700px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
       padding: 50px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: left;
       animation: fadeIn 2s ease forwards;
       opacity: 0;
     }
@@ -51,74 +71,117 @@
     .signature {
       margin-top: 40px;
       font-style: italic;
-      opacity: 0.8;
+      opacity: 0.9;
+    }
+
+    .start-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
     }
 
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 20px;
-      background: #f5f5f5;
-      margin-left: 5px;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 id="title"></h1>
-    <p id="text"></p>
-    <p class="signature">— Un fost coleg care îți apreciază zâmbetul.</p>
-  </div>
 
-  <script>
-    const titleText = "Nu e doar Valentine’s Day.";
-    const messageText = `E o zi în care vreau doar să îți reamintesc ceva simplu:
-nu ești definită de perioada asta grea.
+<canvas id="particles"></canvas>
 
-Am vrut să fac ceva diferit, ceva care să rămână.
-Pentru că sunt oameni care apar în viața noastră
-și chiar dacă nu mai împărțim același birou,
-rămânem cu lucruri mult mai valoroase.
+<div class="container">
+  <h1>Nu e doar Valentine’s Day.</h1>
+  <p>
+    E o zi în care vreau doar să îți reamintesc ceva simplu:
+    nu ești definită de perioada asta grea.
+  </p>
+  <p>
+    Sunt oameni care apar în viața noastră și,
+    chiar dacă drumurile se schimbă,
+    rămânem cu lucruri care contează.
+  </p>
+  <p>
+    Îți doresc liniște.
+    Îți doresc curaj.
+    Și mai ales — zâmbetul tău înapoi.
+  </p>
+  <p class="signature">— Un om care te apreciază.</p>
 
-Îți doresc să îți regăsești liniștea.
-Și zâmbetul.
-Pentru că îl porți incredibil.`;
+  <button class="start-btn" onclick="startMusic()">Apasă pentru un moment liniștit</button>
+</div>
 
-    const title = document.getElementById("title");
-    const text = document.getElementById("text");
+<audio id="bg-music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=soft-piano-ambient-110624.mp3" type="audio/mpeg">
+</audio>
 
-    let i = 0;
-    function typeTitle() {
-      if (i < titleText.length) {
-        title.innerHTML += titleText.charAt(i);
-        i++;
-        setTimeout(typeTitle, 60);
-      } else {
-        typeMessage();
+<script>
+  // MUSIC
+  function startMusic() {
+    const music = document.getElementById("bg-music");
+    music.volume = 0.3;
+    music.play();
+  }
+
+  // PARTICLES
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particlesArray = [];
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 3 + 1;
+      this.speedY = Math.random() * 0.5 + 0.2;
+      this.opacity = Math.random() * 0.5 + 0.3;
+    }
+    update() {
+      this.y -= this.speedY;
+      if (this.y < 0) {
+        this.y = canvas.height;
+        this.x = Math.random() * canvas.width;
       }
     }
-
-    let j = 0;
-    function typeMessage() {
-      if (j < messageText.length) {
-        text.innerHTML += messageText.charAt(j);
-        j++;
-        setTimeout(typeMessage, 25);
-      }
+    draw() {
+      ctx.fillStyle = "rgba(255,255,255," + this.opacity + ")";
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
     }
+  }
 
-    typeTitle();
-  </script>
+  function init() {
+    for (let i = 0; i < 100; i++) {
+      particlesArray.push(new Particle());
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particlesArray.length; i++) {
+      particlesArray[i].update();
+      particlesArray[i].draw();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  init();
+  animate();
+
+  window.addEventListener("resize", function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
 </body>
 </html>
