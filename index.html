@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pentru Gixi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+      font-family: 'Inter', sans-serif;
+      color: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: fadeIn 2s ease forwards;
+      opacity: 0;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .signature {
+      margin-top: 40px;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 20px;
+      background: #f5f5f5;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="title"></h1>
+    <p id="text"></p>
+    <p class="signature">— Un fost coleg care îți apreciază zâmbetul.</p>
+  </div>
+
+  <script>
+    const titleText = "Nu e doar Valentine’s Day.";
+    const messageText = `E o zi în care vreau doar să îți reamintesc ceva simplu:
+nu ești definită de perioada asta grea.
+
+Am vrut să fac ceva diferit, ceva care să rămână.
+Pentru că sunt oameni care apar în viața noastră
+și chiar dacă nu mai împărțim același birou,
+rămânem cu lucruri mult mai valoroase.
+
+Îți doresc să îți regăsești liniștea.
+Și zâmbetul.
+Pentru că îl porți incredibil.`;
+
+    const title = document.getElementById("title");
+    const text = document.getElementById("text");
+
+    let i = 0;
+    function typeTitle() {
+      if (i < titleText.length) {
+        title.innerHTML += titleText.charAt(i);
+        i++;
+        setTimeout(typeTitle, 60);
+      } else {
+        typeMessage();
+      }
+    }
+
+    let j = 0;
+    function typeMessage() {
+      if (j < messageText.length) {
+        text.innerHTML += messageText.charAt(j);
+        j++;
+        setTimeout(typeMessage, 25);
+      }
+    }
+
+    typeTitle();
+  </script>
+</body>
+</html>
